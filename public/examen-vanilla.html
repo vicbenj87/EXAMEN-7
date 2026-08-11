@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>La Era de los Jueces — Examen Interactivo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ==========================================================
+     PUEDES EDITAR LOS COLORES/ESTILOS AQUÍ SI QUIERES
+     ========================================================== */
+  :root{
+    --bg-1:#05070f;
+    --bg-2:#0b1029;
+    --indigo:#4338ca;
+    --indigo-light:#818cf8;
+    --violet:#8b5cf6;
+    --gold:#fbbf24;
+    --text:#e0e7ff;
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0;padding:0;min-height:100vh;
+    background:radial-gradient(circle at top, #1e1b4b 0%, #05070f 60%);
+    font-family:'Quicksand', ui-sans-serif, system-ui, sans-serif;
+    color:var(--text);
+  }
+  .font-display{font-family:'Cinzel', serif;}
+  #app{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+  }
+  .card{
+    width:100%;
+    max-width:720px;
+    background:rgba(15,15,35,0.65);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:24px;
+    padding:32px;
+    backdrop-filter:blur(12px);
+    box-shadow:0 0 60px -15px rgba(99,102,241,0.5);
+  }
+  h1{
+    font-size:2rem;
+    text-align:center;
+    margin:0 0 8px;
+    background:linear-gradient(90deg,#c7d2fe,#a78bfa,#fbbf24);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  p.subtitle{
+    text-align:center;
+    color:#a5b4fc;
+    margin:0 0 24px;
+    letter-spacing:.05em;
+  }
+  .btn{
+    display:inline-block;
+    cursor:pointer;
+    border:none;
+    border-radius:14px;
+    padding:12px 22px;
+    font-weight:700;
+    font-family:inherit;
+    font-size:1rem;
+    transition:filter .15s ease, transform .1s ease;
+  }
+  .btn:active{transform:scale(.98);}
+  .btn-primary{
+    background:linear-gradient(90deg,#6366f1,#8b5cf6);
+    color:white;
+  }
+  .btn-primary:hover{filter:brightness(1.1);}
+  .btn-secondary{
+    background:rgba(99,102,241,0.15);
+    border:1px solid rgba(165,180,252,0.3);
+    color:#e0e7ff;
+  }
+  .btn-secondary:hover{background:rgba(99,102,241,0.3);}
+  .btn-danger{
+    background:rgba(244,63,94,0.15);
+    border:1px solid rgba(244,63,94,0.4);
+    color:#fecdd3;
+  }
+  .btn:disabled{opacity:.4;cursor:not-allowed;}
+  .row{display:flex;gap:12px;flex-wrap:wrap;}
+  .center{display:flex;justify-content:center;}
+  .between{justify-content:space-between;align-items:center;}
+
+  /* Barra de progreso / tiempo */
+  .timebar-track{
+    width:100%;
+    height:10px;
+    border-radius:999px;
+    background:rgba(255,255,255,0.1);
+    overflow:hidden;
+    margin:16px 0 24px;
+  }
+  .timebar-fill{
+    height:100%;
+    border-radius:999px;
+    background:linear-gradient(90deg,#34d399,#fbbf24,#f43f5e);
+    transition:width 1s linear;
+  }
+  .time-label{
+    text-align:center;
+    font-family:'Cinzel',serif;
+    font-size:1.4rem;
+    color:var(--gold);
+    margin-bottom:4px;
+  }
+
+  .question-text{
+    font-size:1.25rem;
+    font-weight:600;
+    margin-bottom:20px;
+    line-height:1.5;
+  }
+  .option{
+    display:block;
+    width:100%;
+    text-align:left;
+    padding:14px 16px;
+    margin-bottom:10px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,0.15);
+    background:rgba(255,255,255,0.04);
+    color:var(--text);
+    cursor:pointer;
+    font-family:inherit;
+    font-size:1rem;
+    transition:all .15s ease;
+  }
+  .option:hover:not(:disabled){
+    border-color:rgba(165,180,252,0.6);
+    background:rgba(99,102,241,0.15);
+  }
+  .option.correct{
+    border-color:#34d399;
+    background:rgba(52,211,153,0.2);
+  }
+  .option.incorrect{
+    border-color:#f43f5e;
+    background:rgba(244,63,94,0.2);
+  }
+  .option:disabled{cursor:not-allowed;}
+
+  .badge{
+    display:inline-block;
+    font-size:.75rem;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    padding:4px 10px;
+    border-radius:999px;
+    background:rgba(165,180,252,0.15);
+    color:#c7d2fe;
+    margin-bottom:14px;
+  }
+
+  /* Editor */
+  fieldset{
+    border:1px solid rgba(255,255,255,0.15);
+    border-radius:14px;
+    padding:16px;
+    margin-bottom:16px;
+  }
+  legend{padding:0 8px;font-weight:700;color:#c7d2fe;}
+  label{
+    display:block;
+    font-size:.8rem;
+    color:#a5b4fc;
+    margin:8px 0 4px;
+  }
+  input[type="text"], input[type="number"], textarea{
+    width:100%;
+    padding:10px 12px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,0.2);
+    background:rgba(0,0,0,0.3);
+    color:white;
+    font-family:inherit;
+    font-size:.95rem;
+  }
+  input[type="radio"]{margin-right:8px;}
+  .opt-edit-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+  .opt-edit-row input[type="text"]{flex:1;}
+  .scroll-area{max-height:60vh;overflow-y:auto;padding-right:6px;}
+  .result-score{
+    text-align:center;
+    font-family:'Cinzel',serif;
+    font-size:3rem;
+    color:var(--gold);
+    margin:10px 0;
+  }
+  .review-item{
+    padding:12px;
+    border-radius:12px;
+    background:rgba(255,255,255,0.04);
+    margin-bottom:10px;
+    border-left:4px solid transparent;
+  }
+  .review-item.ok{border-left-color:#34d399;}
+  .review-item.bad{border-left-color:#f43f5e;}
+  small.muted{color:#94a3b8;}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+/* =========================================================================
+   ZONA DE EDICIÓN — LA ERA DE LOS JUECES — EXAMEN INTERACTIVO
+   -------------------------------------------------------------------------
+   1) Cambia "TIEMPO_POR_PREGUNTA" para ajustar los segundos por defecto.
+   2) Edita, agrega o elimina preguntas dentro del arreglo "PREGUNTAS".
+      - "pregunta": el texto de la pregunta
+      - "opciones": arreglo con 2 a 4 respuestas posibles
+      - "correcta": índice (0,1,2,3...) de la respuesta correcta dentro de "opciones"
+      - "tiempo": (opcional) segundos específicos para ESTA pregunta.
+                  Si no se define, se usa TIEMPO_POR_PREGUNTA.
+   ========================================================================= */
+
+let TIEMPO_POR_PREGUNTA = 20; // segundos por defecto para cada pregunta
+
+let PREGUNTAS = [
+  {
+    pregunta: "¿Quién fue el primer juez que Dios levantó para librar a Israel?",
+    opciones: ["Aod", "Otoniel", "Débora", "Gedeón"],
+    correcta: 1,
+    tiempo: 20
+  },
+  {
+    pregunta: "¿Qué juez israelita era zurdo y mató al rey Eglón de Moab?",
+    opciones: ["Aod", "Samgar", "Barac", "Tola"],
+    correcta: 0,
+    tiempo: 20
+  },
+  {
+    pregunta: "¿Qué profetisa y jueza guio a Israel junto con Barac contra Sísara?",
+    opciones: ["Jael", "Débora", "Ana", "Miriam"],
+    correcta: 1,
+    tiempo: 20
+  },
+  {
+    pregunta: "¿Quién mató a Sísara clavándole una estaca en la sien?",
+    opciones: ["Débora", "Jael", "Dalila", "Rahab"],
+    correcta: 1,
+    tiempo: 25
+  },
+  {
+    pregunta: "¿Cuántos hombres usó Gedeón para derrotar al ejército madianita?",
+    opciones: ["10,000", "1,000", "300", "3,000"],
+    correcta: 2,
+    tiempo: 20
+  },
+  {
+    pregunta: "¿Qué señal pidió Gedeón a Dios usando un vellón de lana?",
+    opciones: [
+      "Que lloviera fuego del cielo",
+      "Que el vellón estuviera mojado o seco mientras el suelo hacía lo contrario",
+      "Que se abriera el Jordán",
+      "Que apareciera un ángel"
+    ],
+    correcta: 1,
+    tiempo: 25
+  },
+  {
+    pregunta: "¿Qué juez hizo un voto imprudente que le costó la vida de su hija?",
+    opciones: ["Jefté", "Sansón", "Elón", "Ibzán"],
+    correcta: 0,
+    tiempo: 20
+  },
+  {
+    pregunta: "¿Qué juez tuvo una fuerza sobrehumana dada por Dios mediante el voto nazareo?",
+    opciones: ["Sansón", "Tola", "Jair", "Abdón"],
+    correcta: 0,
+    tiempo: 15
+  },
+  {
+    pregunta: "¿Quién traicionó a Sansón cortándole el cabello?",
+    opciones: ["Dalila", "Jael", "Débora", "Micaía"],
+    correcta: 0,
+    tiempo: 15
+  },
+  {
+    pregunta: "¿Con qué objeto mató Sansón a mil filisteos?",
+    opciones: ["Una espada", "Una quijada de asno", "Una honda", "Una lanza"],
+    correcta: 1,
+    tiempo: 20
+  },
+  {
+    pregunta: "Según el libro de Jueces, ¿qué hacía cada quien porque no había rey en Israel?",
+    opciones: [
+      "Lo que era recto en su propia opinión",
+      "Sacrificios diarios",
+      "Guerra contra Egipto",
+      "Peregrinaciones a Silo"
+    ],
+    correcta: 0,
+    tiempo: 20
+  },
+  {
+    pregunta: "¿Cuántas veces se repite el ciclo de pecado-opresión-clamor-liberación en el libro de Jueces?",
+    opciones: ["Una vez", "Varias veces, de forma cíclica", "Nunca ocurre", "Solo con Sansón"],
+    correcta: 1,
+    tiempo: 20
+  }
+];
+
+/* ========================================================================= */
+
+const STORAGE_KEY = "examen_jueces_estado_v1";
+
+let state = {
+  screen: "home", // home | quiz | result
+  current: 0,
+  answers: [], // {selected, correct, timeUp}
+  timeLeft: 0,
+  timerId: null
+};
+
+const app = document.getElementById("app");
+
+function render() {
+  if (state.screen === "home") return renderHome();
+  if (state.screen === "quiz") return renderQuiz();
+  if (state.screen === "result") return renderResult();
+}
+
+function renderHome() {
+  app.innerHTML = `
+    <div class="card">
+      <div class="center"><span class="badge">Libro de Jueces</span></div>
+      <h1 class="font-display">La Era de los Jueces</h1>
+      <p class="subtitle">Examen interactivo — pon a prueba lo que sabes</p>
+      <p style="text-align:center; color:#c7d2fe;">
+        ${PREGUNTAS.length} preguntas · tiempo por defecto: ${TIEMPO_POR_PREGUNTA}s (cada pregunta puede tener su propio tiempo)
+      </p>
+      <div class="center" style="margin-top:24px;">
+        <button class="btn btn-primary" id="btnStart">Comenzar examen</button>
+      </div>
+      <p style="text-align:center;margin-top:18px;">
+        <small class="muted">Para editar las preguntas y los tiempos, abre este archivo HTML y modifica el arreglo <code>PREGUNTAS</code> y la variable <code>TIEMPO_POR_PREGUNTA</code> dentro de la etiqueta &lt;script&gt;.</small>
+      </p>
+    </div>
+  `;
+  document.getElementById("btnStart").onclick = startQuiz;
+}
+
+function startQuiz() {
+  state.screen = "quiz";
+  state.current = 0;
+  state.answers = [];
+  render();
+  startTimerForCurrentQuestion();
+}
+
+function startTimerForCurrentQuestion() {
+  clearInterval(state.timerId);
+  const q = PREGUNTAS[state.current];
+  const total = q.tiempo || TIEMPO_POR_PREGUNTA;
+  state.timeLeft = total;
+  updateTimerUI(total, total);
+  state.timerId = setInterval(() => {
+    state.timeLeft -= 1;
+    updateTimerUI(state.timeLeft, total);
+    if (state.timeLeft <= 0) {
+      clearInterval(state.timerId);
+      selectOption(null, true);
+    }
+  }, 1000);
+}
+
+function updateTimerUI(left, total) {
+  const fill = document.getElementById("timeFill");
+  const label = document.getElementById("timeLabel");
+  if (fill) fill.style.width = Math.max(0, (left / total) * 100) + "%";
+  if (label) label.textContent = Math.max(0, left) + "s";
+}
+
+function renderQuiz() {
+  const q = PREGUNTAS[state.current];
+  const total = q.tiempo || TIEMPO_POR_PREGUNTA;
+  app.innerHTML = `
+    <div class="card">
+      <div class="row between">
+        <span class="badge">Pregunta ${state.current + 1} de ${PREGUNTAS.length}</span>
+        <span class="badge">Aciertos: ${state.answers.filter(a=>a.correct).length}</span>
+      </div>
+      <div class="time-label" id="timeLabel">${total}s</div>
+      <div class="timebar-track"><div class="timebar-fill" id="timeFill" style="width:100%"></div></div>
+      <div class="question-text font-display">${q.pregunta}</div>
+      <div id="options">
+        ${q.opciones.map((op, i) => `
+          <button class="option" data-index="${i}">${op}</button>
+        `).join("")}
+      </div>
+    </div>
+  `;
+  document.querySelectorAll(".option").forEach(btn => {
+    btn.onclick = () => selectOption(parseInt(btn.dataset.index), false);
+  });
+}
+
+function selectOption(index, timeUp) {
+  clearInterval(state.timerId);
+  const q = PREGUNTAS[state.current];
+  const correct = !timeUp && index === q.correcta;
+  state.answers.push({ selected: index, correct, timeUp });
+
+  // Mostrar retroalimentación visual antes de avanzar
+  const optionButtons = document.querySelectorAll(".option");
+  optionButtons.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === q.correcta) btn.classList.add("correct");
+    else if (i === index) btn.classList.add("incorrect");
+  });
+
+  setTimeout(() => {
+    if (state.current < PREGUNTAS.length - 1) {
+      state.current += 1;
+      renderQuiz();
+      startTimerForCurrentQuestion();
+    } else {
+      state.screen = "result";
+      render();
+    }
+  }, 900);
+}
+
+function renderResult() {
+  const correctCount = state.answers.filter(a => a.correct).length;
+  const total = PREGUNTAS.length;
+  const pct = Math.round((correctCount / total) * 100);
+  app.innerHTML = `
+    <div class="card">
+      <div class="center"><span class="badge">Resultado final</span></div>
+      <h1 class="font-display" style="margin-bottom:0;">¡Examen completado!</h1>
+      <div class="result-score">${correctCount} / ${total}</div>
+      <p style="text-align:center;color:#c7d2fe;">${pct}% de aciertos</p>
+      <div class="scroll-area" style="margin-top:20px;">
+        ${PREGUNTAS.map((q, i) => {
+          const a = state.answers[i] || {};
+          const cls = a.correct ? "ok" : "bad";
+          const userAns = a.timeUp ? "Sin responder (tiempo agotado)" : (q.opciones[a.selected] ?? "—");
+          return `
+            <div class="review-item ${cls}">
+              <strong>${i+1}. ${q.pregunta}</strong><br/>
+              <small class="muted">Tu respuesta: ${userAns}</small><br/>
+              <small class="muted">Respuesta correcta: ${q.opciones[q.correcta]}</small>
+            </div>
+          `;
+        }).join("")}
+      </div>
+      <div class="center" style="margin-top:20px; gap:12px;">
+        <button class="btn btn-secondary" id="btnRestart">Volver a intentar</button>
+      </div>
+    </div>
+  `;
+  document.getElementById("btnRestart").onclick = () => {
+    state.screen = "home";
+    render();
+  };
+}
+
+render();
+</script>
+</body>
+</html>

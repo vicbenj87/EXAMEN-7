@@ -8,10 +8,10 @@ export const EXAM_SUBTITLE =
 export const QUESTION_TIME_SECONDS = 20;
 
 /** Milisegundos que dura el pop-up de instrucciones antes de cada ejercicio */
-export const INSTRUCTION_POPUP_MS = 5000;
+export const INSTRUCTION_POPUP_MS = 10000;
 
 /** Milisegundos que se muestra la retroalimentación antes de pasar al siguiente ejercicio */
-export const FEEDBACK_DELAY_MS = 2600;
+export const FEEDBACK_DELAY_MS = 2999;
 
 /**
  * URL del Google Apps Script (Web App) que recibe los resultados y los agrega
